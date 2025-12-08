@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -41,7 +40,7 @@
             font-size:2.32rem;
             font-weight:700;
             letter-spacing:3px;
-            margin-top:64px;
+            margin-top:72px;
 
             line-height:0.85;
         }
@@ -103,9 +102,9 @@
 
         .category-btn{
             min-width:66px;
-            padding:7px 21px;
+            padding:7px 18px;
             font-size:1.05rem;
-            border-radius:19px;
+            border-radius:20px;
             background:rgba(40,44,60,0.45);
             color:var(--primary);
             border:none;
@@ -150,6 +149,9 @@
         }
 
         .site-grid.faded{opacity:0; pointer-events:none;}
+        
+        /* 新增：用于彻底隐藏 Grid 以便 EmbyBox 占据空间 */
+        .site-grid.hidden-layout { display: none; }
 
         .site-card{
             background:rgba(28,30,38,0.56);
@@ -208,19 +210,20 @@
         }
         .backup-none-btn{ color:#b6b2b2; border-color:rgba(255,107,61,0.22); }
 
+        /* 修改后的 .emby-box 样式 */
         .emby-box{
-            position:absolute;
-            inset:0;
-            display:none;
-            z-index:2;
-            align-items:center;
-            justify-content:center;
-            padding:18px;
-            box-sizing:border-box;
+            position: relative; /* 改为 relative，使其撑开父容器高度 */
+            width: 100%;
+            display: none;
+            z-index: 2;
+            align-items: flex-start; /* 改为 flex-start，消除顶部不必要的空白 */
+            justify-content: center;
+            padding: 0; /* 去掉 padding，使内容紧贴容器边缘，保持间距一致 */
+            box-sizing: border-box;
         }
         .emby-box .card{
             width:100%;
-            max-width:980px;
+            max-width:900px;
             background:transparent;
             border-radius:0;
             border:none;
@@ -233,6 +236,8 @@
             text-align:left;
             font-size:clamp(1.13rem, 1.4vw, 1.21rem);
             line-height:1.55;
+            font-weight:500;
+            margin: 0 auto; /* 确保卡片居中 */
         }
         .emby-box h3{ margin:0; font-size:clamp(1.05rem,2.1vw,1.42rem); color:var(--accent); letter-spacing:0.6px; display: flex; justify-content: center;}
         .emby-box p{ margin:0; font-size:clamp(0.91rem,1.3vw,1.22rem); color:#d7d4d8; }
@@ -280,6 +285,7 @@
         .backup-btn-large{
             padding:6.44px 14.8px;
             font-size:0.89rem;
+            font-weight:600;
             color:var(--accent);
             border:2px solid var(--accent);
             background:transparent;
@@ -292,13 +298,12 @@
         .backup-btn-large:hover{ background:var(--accent); color:var(--background); }
 
         footer{
-            margin-top:18px;
             width:100%;
             text-align:center;
             color:#98a0b8;
             font-size:1rem;
             padding:18px 0 13px 0;
-            letter-spacing:1px;
+            letter-spacing:0.6px;
         }
         footer a{ color:var(--accent); text-decoration:none; margin-left:10px; }
 
@@ -330,14 +335,12 @@
             <div id="embyBox" class="emby-box" aria-hidden="true">
                 <div id="embyCard" class="card" role="region" aria-label="浮层说明" tabindex="-1">
                     <h3>Emby服</h3>
-                    <p>如果你厌倦了视频网站多元的广告和模糊不清的画质，Emby服会是不错的选择。<br>
-                    Emby服可大致分为以下两类：</p>
+                    <p>没有各种广告和高画质是Emby服的特点，ta一般大致分为以下两类：</p>
                     <ul>
                         <li>公益服：无需付费，但可能有一定入服门槛</li><a href="https://intro.bgp.yt/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">二次元Emby</a>、<a href="https://discord.gg/WHxeZ3aTtb" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">Gir Society</a>[Jellyfin/Plex]、<a href="https://t.me/embyxk" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益服星空指南</a>、<a href="https://t.me/FreeEmbyGuide" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">公益不完全指北</a>
                         <li>付费服：需要付费，但服务会相对比较稳定</li><a href="https://plan.emby.moe/" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">1111Emby</a>、<a href="https://micu.hk/archives/emby-users" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">MICU</a>、<a href="https://zdz.best" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">终点站+</a>[需等空位]、<a href="https://t.me/robo_emby" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">Robo Emby</a>、<a href="https://t.me/Emby_Navigation" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">付费Emby导航</a>
                    </ul>
-                    <p>入服后，选一个你中意的 <a href="https://emby.wiki/zh/客户端选择" style="color:#9e9eff;" target="_blank" rel="noopener noreferrer">客户端</a>，填入<a href="https://emby.wiki/zh/线路说明" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">线路</a>和账户密码后，即可观看高清无广告的影片了。</p>
-                        <ul><li>详细教程请访问：<a href="https://emby.wiki/zh/home" style="color:#9e9eff;" target="_blank" rel="noopener noreferrer">emby.wiki</a></li></ul>
+                    <p>入服后，选一个你中意的 <a href="https://emby.wiki/zh/客户端选择" style="color:#9e9eff;" target="_blank" rel="noopener noreferrer">客户端</a>，填入<a href="https://emby.wiki/zh/线路说明" style="color: #9e9eff;" target="_blank" rel="noopener noreferrer">线路</a>和账户密码后，即可观看影片了。详细教程请访问：<a href="https://emby.wiki/zh/home" style="color:#9e9eff;" target="_blank" rel="noopener noreferrer">emby.wiki</a></p>
                     <p>注意事项：</p>
                     <ul>
                         <li>购买前确保你可以访问相关Emby服线路，或咨询服主线路是否可以直连</li>
@@ -358,6 +361,7 @@
                 </ul>
                 <p>注意事项：</p>
                 <ul>
+                    <li>OK影视/TvBox是资源聚合的播放器，一般视频内容画质也一般，只是没有像弹窗和贴片这样的广告<br>
                     <li>4k高清内容多是通过token和Cookie获取你的网盘读取权限实现的，你需要网盘VIP或SVIP或SVIP+
             </template>
         </div>
@@ -512,9 +516,13 @@
                 embyCardEl.innerHTML = '<h3>OK影视</h3><p>OK影视说明文字</p>';
             }
         }
+        
+        // 关键修改：隐藏原始 Grid，让 Emby Box 占据其位置，从而撑开父容器高度，消除上下空白
+        grid.classList.add('hidden-layout');
+        grid.classList.add('faded');
+        
         embyBox.classList.add('show');
         embyBox.setAttribute('aria-hidden', 'false');
-        grid.classList.add('faded');
 
         const isMobile = window.matchMedia && window.matchMedia('(max-width: 900px)').matches;
         setTimeout(() => {
@@ -542,6 +550,10 @@
         if (!embyBox || !embyCardEl) return;
         embyBox.classList.remove('show');
         embyBox.setAttribute('aria-hidden', 'true');
+        
+        // 关键修改：恢复 Grid 显示
+        grid.classList.remove('hidden-layout');
+        
         if (hideWithAnimation) {
             requestAnimationFrame(() => { grid.classList.remove('faded'); });
         } else {
@@ -776,4 +788,3 @@
 
 </body>
 </html>
-llq
