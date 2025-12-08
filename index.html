@@ -36,7 +36,6 @@
         }
         *,*::before,*::after{box-sizing:inherit;}
 
-        /* 页面标题保持原来的书写体 */
         header{
             font-family:"Zhi Mang Xing", "LXGW WenKai TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             font-size:2.6rem;
@@ -96,18 +95,17 @@
 
         .category-btns{
             display:flex;
-            gap:14px;
+            gap:15px;
             margin-bottom:14px;
             justify-content:center;
             width:100%;
         }
 
-        /* 指定：把网盘/在线/BT 三按钮字体设为 LXGW WenKai TC（标题不受影响） */
         .category-btn{
             min-width:66px;
-            padding:6px 14px;
-            font-size:1.11rem;
-            border-radius:22px;
+            padding:7px 21px;
+            font-size:1.05rem;
+            border-radius:19px;
             background:rgba(40,44,60,0.45);
             color:var(--primary);
             border:none;
@@ -155,7 +153,7 @@
 
         .site-card{
             background:rgba(28,30,38,0.56);
-            border-radius:17px;
+            border-radius:25px;
             box-shadow:0 2px 8px rgba(2,4,8,0.6);
             padding:17.8px 22.6px;
             width:80.75%;
@@ -262,7 +260,7 @@
             align-items:center;
             width:100%;
             text-align:center;
-            font-size:.84rem;
+            font-size:.87rem;
             color:#bfc2d4;
             margin-bottom:10px;
             margin-top:10px;
@@ -279,7 +277,6 @@
             gap:12px;
         }
 
-        /* 指定：Emby服 和 OK影视 两个大按钮的字体也设为 LXGW WenKai TC */
         .backup-btn-large{
             padding:6.44px 14.8px;
             font-size:0.89rem;
@@ -324,7 +321,7 @@
         <div class="category-btns">
             <button class="category-btn" id="btn-pan" onclick="switchCategory('pan')">网盘</button>
             <button class="category-btn active" id="btn-online" onclick="switchCategory('online')">在线</button>
-            <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">BT</button>
+            <button class="category-btn" id="btn-bt" onclick="switchCategory('bt')">磁力</button>
         </div>
 
         <div class="grid-wrapper">
@@ -361,7 +358,7 @@
                 </ul>
                 <p>注意事项：</p>
                 <ul>
-                    <li>4k高清内容多是通过获取网盘token和Cookie后，获取你的网盘读取权限实现的，你需要网盘VIP或SVIP或SVIP+
+                    <li>4k高清内容多是通过token和Cookie获取你的网盘读取权限实现的，你需要网盘VIP或SVIP或SVIP+
             </template>
         </div>
 
