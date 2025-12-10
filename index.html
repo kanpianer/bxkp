@@ -150,7 +150,6 @@
 
         .site-grid.faded{opacity:0; pointer-events:none;}
         
-        /* 新增：用于彻底隐藏 Grid 以便 EmbyBox 占据空间 */
         .site-grid.hidden-layout { display: none; }
 
         .site-card{
@@ -210,15 +209,14 @@
         }
         .backup-none-btn{ color:#b6b2b2; border-color:rgba(255,107,61,0.22); }
 
-        /* 修改后的 .emby-box 样式 */
         .emby-box{
-            position: relative; /* 改为 relative，使其撑开父容器高度 */
+            position: relative;
             width: 100%;
             display: none;
             z-index: 2;
-            align-items: flex-start; /* 改为 flex-start，消除顶部不必要的空白 */
+            align-items: flex-start;
             justify-content: center;
-            padding: 0; /* 去掉 padding，使内容紧贴容器边缘，保持间距一致 */
+            padding: 0;
             box-sizing: border-box;
         }
         .emby-box .card{
@@ -237,7 +235,7 @@
             font-size:clamp(1.13rem, 1.4vw, 1.21rem);
             line-height:1.55;
             font-weight:500;
-            margin: 0 auto; /* 确保卡片居中 */
+            margin: 0 auto;
         }
         .emby-box h3{ margin:0; font-size:clamp(1.05rem,2.1vw,1.42rem); color:var(--accent); letter-spacing:0.6px; display: flex; justify-content: center;}
         .emby-box p{ margin:0; font-size:clamp(0.91rem,1.3vw,1.22rem); color:#d7d4d8; }
@@ -311,10 +309,220 @@
         ::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.06); border-radius:6px; }
 
         @media (prefers-reduced-motion:reduce){ #starfield{ will-change:auto; } }
+
+        /* --- 拉线开关样式 --- */
+        .light-switch {
+            position: absolute;
+            top: 0;
+            right: 5%; /* 网页右上方 */
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out;
+            will-change: transform;
+        }
+        .light-switch:active {
+            transform: translateY(15px);
+        }
+        .switch-base {
+            width: 20px;
+            height: 10px;
+            background: #2b303c;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .switch-cord {
+            width: 2px;
+            /* 原长度 120px，减少35% (120 * 0.65 = 78) */
+            height: 78px; 
+            background: linear-gradient(to bottom, #555, #999);
+            position: relative;
+        }
+        .switch-handle {
+            width: 16px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 30%, #ff8e6e, #ff6b3d);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* 水滴形状 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(0,0,0,0.3);
+            margin-top: -2px;
+        }
+        
+        /* --- 弹窗面板遮罩层（用于点击关闭） --- */
+        .panel-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.01); /* 几乎透明，仅用于拦截点击 */
+            z-index: 9998; /* 在面板之下，其他元素之上 */
+            display: none;
+            cursor: default;
+        }
+        .panel-overlay.active {
+            display: block;
+        }
+
+        /* --- 弹窗面板样式 (已修改为支持翻转) --- */
+        .secret-panel {
+            position: fixed; /* 固定在窗口 */
+            top: -150%; /* 初始隐藏 */
+            left: 50%; /* 水平居中基准 */
+            transform: translateX(-50%); /* 修正自身宽度实现完全居中 */
+            width: clamp(300px, 90vw, 450px);
+            /* 移除背景和阴影，由内部的面承担 */
+            background: transparent;
+            z-index: 9999;
+            perspective: 1500px; /* 3D透视 */
+            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .secret-panel.active {
+            top: clamp(147px, 20vh, 160px); 
+        }
+
+        /* 翻转容器 */
+        .flipper {
+            position: relative;
+            width: 100%;
+            transform-style: preserve-3d; /* 保留3D空间 */
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .flipper.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* 正反面公共样式 */
+        .flip-face {
+            width: 100%;
+            background: rgba(28,30,38,0.85); /* 增加不透明度防止透视 */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 0 1px var(--outline);
+            backdrop-filter: blur(15px);
+            backface-visibility: hidden; /* 隐藏背面 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        /* 正面 */
+        .front {
+            /* 默认层级 */
+            z-index: 2;
+        }
+
+        /* 背面 */
+        .back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotateY(180deg); /* 初始旋转180度 */
+            z-index: 1;
+            height: 100%; /* 确保高度一致 */
+            justify-content: space-between; /* 垂直分布 */
+        }
+
+        .secret-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            object-fit: cover;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer; /* 提示可点击 */
+            transition: transform 0.2s;
+        }
+        .secret-img:hover {
+            transform: scale(1.02);
+        }
+        
+        .back .secret-img {
+             /* 调整背面图片的显示比例，确保填充满 */
+             flex: 1;
+             min-height: 0;
+        }
+
+        .secret-btns {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .secret-btn {
+            flex: 1;
+            padding: 10px 0;
+            font-size: 1rem;
+            border-radius: 12px;
+            background: rgba(40,44,60,0.6);
+            color: var(--primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            text-align: center;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .secret-btn:hover {
+            background: var(--button-hover);
+            color: var(--accent);
+            border-color: var(--outline);
+            transform: translateY(-2px);
+        }
+
     </style>
 </head>
 <body>
     <canvas id="starfield" aria-hidden="true"></canvas>
+
+    <!-- 拉线开关 -->
+    <div class="light-switch" id="lightSwitch" onclick="toggleSecretPanel()">
+        <div class="switch-base"></div>
+        <div class="switch-cord"></div>
+        <div class="switch-handle"></div>
+    </div>
+
+    <!-- 遮罩层（点击关闭） -->
+    <div class="panel-overlay" id="panelOverlay" onclick="toggleSecretPanel()"></div>
+
+    <!-- 弹出的中心卡片图层 (支持翻转) -->
+    <div class="secret-panel" id="secretPanel">
+        <div class="flipper" id="panelFlipper">
+            <!-- 正面 (Front) -->
+            <div class="flip-face front">
+                <img src="https://www.apple.com/tv-pr/articles/2025/10/apple-tv-debuts-trailer-for-vince-gilligans-highly-anticipated-drama-pluribus-starring-emmy-award-nominee-rhea-seehorn/images/big-image/big-image-01/102225_Apple_Debuts_Trailer_Drama_Pluribus_Big_Image_01_big_image_post.jpg.large_2x.jpg?q=80&w=600&auto=format&fit=crop" 
+                     alt="点击翻转" 
+                     class="secret-img" 
+                     onclick="toggleFlip()"
+                     title="点击图片翻转">
+                <div class="secret-btns">
+                    <button class="secret-btn" onclick="window.open('https://www.qmp4.com/mv/460912.html', '_blank')">网盘</button>
+                    <button class="secret-btn" onclick="window.open('https://www.novipnoad.cc/tv/western/152182.html', '_blank')">在线</button>
+                    <button class="secret-btn" onclick="window.open('https://www.cilixiong.org/drama/4552.html', '_blank')">磁力</button>
+                </div>
+            </div>
+
+            <!-- 背面 (Back) -->
+            <div class="flip-face back">
+                <!-- 另一张图片 -->
+                <img src="https://www.infamoushorror.com/wp-content/uploads/2023/12/img_5354-1.jpg?q=80&w=600&auto=format&fit=crop" 
+                     alt="点击翻回" 
+                     class="secret-img" 
+                     onclick="toggleFlip()"
+                     title="点击图片返回">
+                <div class="secret-btns">
+                    <!-- 不同的按钮 -->
+                    <button class="secret-btn" onclick="window.open('https://www.qmp4.com/mv/459048.html', '_blank')">网盘</button>
+                    <button class="secret-btn" onclick="window.open('https://www.novipnoad.cc/tv/western/152181.html', '_blank')">在线</button>
+                    <button class="secret-btn" onclick="window.open('https://www.cilixiong.org/drama/4567.html', '_blank')">磁力</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <header class="title-box">不想看片</header>
@@ -430,6 +638,38 @@
     let currentCategory = 'online';
     let infoActive = false;
     let currentInfoType = null;
+    
+    // --- 拉线开关逻辑 ---
+    function toggleSecretPanel() {
+        const panel = document.getElementById('secretPanel');
+        const overlay = document.getElementById('panelOverlay');
+        const sw = document.getElementById('lightSwitch');
+        
+        // 拉线动画
+        sw.style.transform = 'translateY(15px)';
+        setTimeout(() => { sw.style.transform = 'translateY(0)'; }, 150);
+
+        // 切换面板和遮罩层显示/隐藏
+        panel.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // 如果关闭面板，重置翻转状态（可选）
+        if (!panel.classList.contains('active')) {
+            setTimeout(() => {
+                const flipper = document.getElementById('panelFlipper');
+                if (flipper) flipper.classList.remove('flipped');
+            }, 600);
+        }
+    }
+
+    // --- 卡片翻转逻辑 ---
+    function toggleFlip() {
+        const flipper = document.getElementById('panelFlipper');
+        if (flipper) {
+            flipper.classList.toggle('flipped');
+        }
+    }
+    // --- 拉线开关逻辑结束 ---
 
     function switchCategory(category) {
         currentCategory = category;
@@ -517,7 +757,6 @@
             }
         }
         
-        // 关键修改：隐藏原始 Grid，让 Emby Box 占据其位置，从而撑开父容器高度，消除上下空白
         grid.classList.add('hidden-layout');
         grid.classList.add('faded');
         
@@ -551,7 +790,6 @@
         embyBox.classList.remove('show');
         embyBox.setAttribute('aria-hidden', 'true');
         
-        // 关键修改：恢复 Grid 显示
         grid.classList.remove('hidden-layout');
         
         if (hideWithAnimation) {
